@@ -40,11 +40,12 @@ for k in model.K:
         for j, valor in enumerate(fila):
             valor_float = float(str(valor).replace(',', '.'))
             model.a[f'R{i+1}', f'P{j+1}', k] = valor_float
-
+'''
 for k in model.K:
     for i in model.I:
         for j in model.J:
             print(f"Unidades del recurso {i} para producir el producto {j} en la fabrica {k}: {pyo.value(model.a[i, j, k])}")
+'''
 
 # b_ik
 model.b = pyo.Param(model.I, model.K, within=pyo.NonNegativeReals, mutable=True)
