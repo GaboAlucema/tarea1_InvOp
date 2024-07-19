@@ -1,6 +1,6 @@
 Instalar:
+    anaconda para glpk o scip (con su entorno nuevo pyomo_env)
     pyomo
-    numpy
     pandas
 
 Extras:
