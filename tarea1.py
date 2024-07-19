@@ -1,7 +1,6 @@
 import pyomo.environ as pyo
 from pyomo.opt import SolverFactory
 import pandas as pd
-import numpy as np
 
 # Importar los datos
 df_F1 = pd.read_csv('F1.csv',skiprows=1,delimiter=';',index_col=0)
@@ -86,4 +85,27 @@ for j in model.J:
 # x_jk
 model.x = pyo.Var(model.J, model.K, within=pyo.NonNegativeReals)
 
+# Minimizar la funcion objetivo
+def min_obj(model):
+    return sum(model.c[j, k] * model.x[j, k] for j in model.J for k in model.K)
+model.obj = pyo.Objective(rule=min_obj, sense=pyo.minimize)
 
+# Restricciones
+def restriccion_recursos(model, i, k):
+    return sum(model.a[i, j, k] * model.x[j, k] for j in model.J) <= model.b[i, k]
+model.restriccion_recursos = pyo.Constraint(model.I, model.K, rule=restriccion_recursos)
+
+def restriccion_demanda(model, j):
+    return sum(model.x[j, k] for k in model.K) >= model.d[j]
+model.restriccion_demanda = pyo.Constraint(model.J, rule=restriccion_demanda)
+
+# Resolver el modelo
+opt = SolverFactory('glpk')
+results = opt.solve(model)
+
+# Imprimir los resultados
+print("Costo total de produccion: ", pyo.value(model.obj))
+print("Cantidad de productos a producir en cada fabrica: ")
+for j in model.J:
+    for k in model.K:
+        print(f"Producto {j} en fabrica {k}: {pyo.value(model.x[j, k])}")
