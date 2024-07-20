@@ -109,3 +109,24 @@ print("Cantidad de productos a producir en cada fabrica: ")
 for k in model.K:
     for j in model.J:
         print(f"Producto {j} en fabrica {k}: {pyo.value(model.x[j, k]):.1f}")
+
+# Generar un archivo con los resultados obtenidos 
+
+file_path = "resultado.csv"
+with open(file_path, 'w') as file:
+    file.writelines(";P1;P2;P3;P4;P5;P6;P7;P8;P9;P10;P11;P12\n")
+
+    for k in model.K:
+        file.write(f"Fabrica {k};")
+        for j in model.J:
+            valor = pyo.value(model.x[j, k])
+            valor_str = f"{valor:.2f}".replace('.', ',')
+            file.write(f"{valor_str};")
+            if j == "P12":
+                file.write("\n")
+
+    costo_total = pyo.value(model.obj)
+    costo_total_str = f"{costo_total:.2f}".replace('.', ',')
+    file.writelines(f"\nCosto total de produccion;{costo_total_str}")
+
+print("Archivo " + file_path + " Creado con Exito.")
