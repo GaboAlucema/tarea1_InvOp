@@ -104,8 +104,8 @@ opt = SolverFactory('glpk')
 results = opt.solve(model)
 
 # Imprimir los resultados
-print("Costo total de produccion: ", pyo.value(model.obj))
+print("Costo total de produccion: {:.2f}".format(pyo.value(model.obj)))
 print("Cantidad de productos a producir en cada fabrica: ")
 for k in model.K:
     for j in model.J:
-        print(f"Producto {j} en fabrica {k}: {pyo.value(model.x[j, k])}")
+        print(f"Producto {j} en fabrica {k}: {pyo.value(model.x[j, k]):.1f}")
